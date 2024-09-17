@@ -11,7 +11,7 @@
     </select>
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (username, password, create_time, role_id)
-        VALUES (#{username}, #{password}, now(),#{role})
+        VALUES (#{username}, #{password}, now(),#{role.id})
     </insert>
     <select id="checkLogin" parameterType="String" resultType="com.example.springtestsecurity.entity.User">
         SELECT username,password
@@ -35,7 +35,7 @@
         FROM users
         WHERE id!=#{id} and username=#{username}
     </select>
-    <select id="findRoleUser" parameterType="String" resultType="com.example.springtestsecurity.entity.Role">
+    <select id="findRoleUser" parameterType="map" resultType="com.example.springtestsecurity.entity.Role">
         select id
         from roles
         where name=#{name}
@@ -58,5 +58,10 @@
            </if>
        </where>
     </select>
-
+    <select id="findRoleByUsername" parameterType="String" resultType="com.example.springtestsecurity.entity.Role">
+        select r.id, r.can_create, r.can_update, r.can_delete,r.name
+        from roles r
+        inner join users u on u.role_id=r.id
+        where u.username=#{username}
+    </select>
 </mapper>

@@ -24,7 +24,13 @@ public class JwtUtils {
                 .compact();
         return token;
     }
-
+    public String getUsernameFromToken(String token){
+        System.out.println(getClaimsFromToken(token).getSubject());
+        return getClaimsFromToken(token).getSubject();
+    }
+    public Claims getClaimsFromToken(String token){
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    }
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);

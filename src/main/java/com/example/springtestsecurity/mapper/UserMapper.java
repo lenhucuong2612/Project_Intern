@@ -24,4 +24,5 @@ public interface UserMapper {
 
     List<FindUserRequest> findUser(String username, String  create_time);
     Role findRoleUser(String username);
+    Role findRoleByUsername(String username);
 }

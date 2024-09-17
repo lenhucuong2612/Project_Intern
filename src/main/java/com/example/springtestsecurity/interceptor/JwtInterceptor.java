@@ -1,5 +1,6 @@
 package com.example.springtestsecurity.interceptor;
 
+import com.example.springtestsecurity.service.PermissionService;
 import com.example.springtestsecurity.service.RedisService;
 import com.example.springtestsecurity.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.io.IOException;
 public class JwtInterceptor implements HandlerInterceptor {
     private final JwtUtils jwtUtils;
     private final RedisService redisService;
+    private final PermissionService permissionService;
 
 
     @Override
@@ -38,9 +40,13 @@ public class JwtInterceptor implements HandlerInterceptor {
         // Check quyen user
         // Lay danh sach quyen & get column can query
         // Truy van database => Quyen la true or false
-        request.getRequestURI();
-
-
+        String username= jwtUtils.getUsernameFromToken(token);
+        String requestPath=request.getRequestURI();
+        String requestMethod=request.getMethod();
+        boolean hasPermission= permissionService.hasPermission(requestPath,requestMethod,username);
+        if(!hasPermission){
+            return unauthorizedResponse(response,"002","Access Denied");
+        }
         return true;
     }
 

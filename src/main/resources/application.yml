@@ -1,0 +1,17 @@
+#api-permission:
+#  path-to-permission:
+#    '/api/user/create:POST': create_user
+#    '/api/user/update/{id}:PUT': update_user
+#    '/api/user/delete:DELETE': delete_user
+#    '/api/user/findUser:GET': find_user
+#  path-to-permission-ignore:
+#    '/api/user/login:POST': login_user
+
+api-permission:
+  path-to-permission:
+    '[/api/user/create]:POST': create_user
+    '[/api/user/update/{id}]:PUT': update_user
+    '[/api/user/delete]:DELETE': delete_user
+    '[/api/user/findUser]:GET': find_user
+  path-to-permission-ignore:
+    '[/api/user/login]:POST': login_user
