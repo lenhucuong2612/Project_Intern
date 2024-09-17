@@ -9,9 +9,9 @@
 
 api-permission:
   path-to-permission:
-    '[/api/user/create]:POST': create_user
-    '[/api/user/update/{id}]:PUT': update_user
-    '[/api/user/delete]:DELETE': delete_user
+    '[/api/user/create]:POST': can_create
+    '[/api/user/update/{id}]:PUT': can_update
+    '[/api/user/delete]:DELETE': can_delete
     '[/api/user/findUser]:GET': find_user
   path-to-permission-ignore:
     '[/api/user/login]:POST': login_user

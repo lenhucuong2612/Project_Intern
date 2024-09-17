@@ -58,6 +58,7 @@
            </if>
        </where>
     </select>
+
     <select id="findRoleByUsername" parameterType="String" resultType="com.example.springtestsecurity.entity.Role">
         select r.id, r.can_create, r.can_update, r.can_delete,r.name
         from roles r

@@ -20,11 +20,11 @@ public class Role {
     private Long id;
     private String name;
     @Column(name="can_create")
-    private boolean create;
+    private boolean can_create;
     @Column(name="can_update")
-    private boolean update;
+    private boolean can_update;
     @Column(name="can_delete")
-    private boolean delete;
+    private boolean can_delete;
 
     @OneToMany(mappedBy = "role")
     private List<User> user;
@@ -34,9 +34,9 @@ public class Role {
         return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", create=" + create +
-                ", update=" + update +
-                ", delete=" + delete +
+                ", create=" + can_create +
+                ", update=" + can_update +
+                ", delete=" + can_delete +
                 ", user=" + user +
                 '}';
     }

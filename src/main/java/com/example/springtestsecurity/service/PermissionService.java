@@ -32,9 +32,11 @@ public class PermissionService {
         }
 
         // Tạo khóa cho quyền
-        String permissionKey = path + ":" + method;
+        //String permissionKey = path + ":" + method;
+        String permissionKey="[/api/user/create]:POST";
         String permissionValue = permission.getPathToPermission().get(permissionKey);
-
+        System.out.println(permissionKey);
+        System.out.println(permissionValue);
         if (permissionValue != null) {
             // Bạn có thể thực hiện kiểm tra quyền ở đây nếu cần
             // Ví dụ:
@@ -48,9 +50,9 @@ public class PermissionService {
         boolean canCreate=permissions.getOrDefault("create",false);
         boolean canUpdate=permissions.getOrDefault("update",false);
         boolean canDelete=permissions.getOrDefault("delete",false);
-        return  (canCreate && role.isCreate()) ||
-                (canUpdate && role.isUpdate()) ||
-                (canDelete && role.isDelete());
+        return  (canCreate && role.isCan_create()) ||
+                (canUpdate && role.isCan_update()) ||
+                (canDelete && role.isCan_delete());
     }
     private Role getUserRoleFromUsername(String username){
         return userMapper.findRoleByUsername(username);

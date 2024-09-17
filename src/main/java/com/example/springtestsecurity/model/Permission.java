@@ -12,8 +12,8 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "api-permission")
 @Component
 public class Permission {
-   private Map<String, String> pathToPermission;
-   private Map<String, String> pathToPermissionIgnore;
+    private Map<String, String> pathToPermission;
+    private Map<String, String> pathToPermissionIgnore;
 
     public Map<String, String> getPathToPermission() {
         return pathToPermission;
