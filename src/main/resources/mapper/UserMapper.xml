@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springtestsecurity.mapper.UserMapper">
+
+    <!-- Truy vấn người dùng theo id -->
+    <select id="findUserName" parameterType="String" resultType="com.example.springtestsecurity.request.FindUserRequest">
+        SELECT username, create_time
+        FROM users
+        WHERE username = #{username}
+    </select>
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, password, create_time, role_id)
+        VALUES (#{username}, #{password}, now(),#{role})
+    </insert>
+    <select id="checkLogin" parameterType="String" resultType="com.example.springtestsecurity.entity.User">
+        SELECT username,password
+        FROM users
+        WHERE username = #{username}
+    </select>
+    <update id="updateUser" parameterType="map">
+        UPDATE users
+        SET username = #{userRequest.username},
+            password = #{userRequest.password}
+        WHERE id = #{id}
+    </update>
+    <select id="checkUserById" parameterType="Long" resultType="com.example.springtestsecurity.entity.User">
+        SELECT username,password
+        FROM users
+        WHERE id=#{id}
+    </select>
+
+    <select id="checkExitsUserById" parameterType="map" resultType="com.example.springtestsecurity.entity.User">
+        SELECT username
+        FROM users
+        WHERE id!=#{id} and username=#{username}
+    </select>
+    <select id="findRoleUser" parameterType="String" resultType="com.example.springtestsecurity.entity.Role">
+        select id
+        from roles
+        where name=#{name}
+    </select>
+    <delete id="deleteUserByName" parameterType="String">
+        delete from users where username=#{username}
+    </delete>
+    <select id="findUser" parameterType="map" resultType="com.example.springtestsecurity.request.FindUserRequest">
+        select username,create_time
+        from users
+       <where>
+           <if test="username!=null and username != ''">
+              username=#{username}
+           </if>
+           <if test="create_time!=null and create_time != ''" >
+               <if test="username != null and username != ''">
+                   and
+               </if>
+               create_time &lt; #{create_time}
+           </if>
+       </where>
+    </select>
+
+</mapper>
