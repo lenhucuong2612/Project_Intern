@@ -52,7 +52,13 @@ public class UserService {
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(encodedPassword);
-        Role role_id= userMapper.findRoleUser(request.getRole());
+        Role role_id= userMapper.findRoleUser(request.getRole().toUpperCase());
+        System.out.println(role_id);
+        if(role_id==null){
+            apiResponse.setError_cd("001");
+            apiResponse.setError_msg("Role no empty");
+            return apiResponse;
+        }
         newUser.setRole(role_id);
         int checkInsert=userMapper.insertUser(newUser);
         if(checkInsert>0){

@@ -45,7 +45,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         String requestMethod=request.getMethod();
         boolean hasPermission= permissionService.hasPermission(requestPath,requestMethod,username);
         if(!hasPermission){
-            return unauthorizedResponse(response,"002","Access Denied");
+            return unauthorizedResponse(response,"002","The account does not have permission to perform the function");
         }
         return true;
     }

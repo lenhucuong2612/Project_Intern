@@ -12,6 +12,6 @@ api-permission:
     '[/api/user/create]:POST': can_create
     '[/api/user/update/{id}]:PUT': can_update
     '[/api/user/delete]:DELETE': can_delete
-    '[/api/user/findUser]:GET': find_user
   path-to-permission-ignore:
     '[/api/user/login]:POST': login_user
+    '[/api/user/findUser]:GET': find_user

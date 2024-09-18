@@ -1,12 +1,9 @@
 package com.example.springtestsecurity.model;
 
-import com.example.springtestsecurity.permission.PermissionIgnore;
-import com.example.springtestsecurity.permission.PermissionValue;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "api-permission")
@@ -29,5 +26,12 @@ public class Permission {
 
     public void setPathToPermissionIgnore(Map<String, String> pathToPermissionIgnore) {
         this.pathToPermissionIgnore = pathToPermissionIgnore;
+    }
+    @PostConstruct
+    public void init() {
+        System.out.println("Loaded pathToPermission: " + pathToPermission);
+        for (Map.Entry<String, String> entry : pathToPermission.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
     }
 }

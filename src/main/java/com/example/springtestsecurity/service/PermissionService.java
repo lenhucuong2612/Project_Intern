@@ -16,8 +16,11 @@ public class PermissionService {
     private final Permission permission;
     private final UserMapper userMapper;
 
-    public boolean hasPermission(String path,String method,String username){
-        String ignoreKey = path + ":" + method;
+    public boolean hasPermission(String path, String method, String username) {
+        // Tạo khóa bỏ qua (ignoreKey)
+        String ignoreKey = path + "." + method;
+
+        // Kiểm tra nếu đường dẫn nằm trong danh sách bỏ qua
         if (permission.getPathToPermissionIgnore().containsKey(ignoreKey)) {
             System.out.println("Path is ignored: " + ignoreKey);
             return true; // Được phép nếu là đường dẫn bị bỏ qua
@@ -31,31 +34,41 @@ public class PermissionService {
             return false;
         }
 
-        // Tạo khóa cho quyền
-        //String permissionKey = path + ":" + method;
-        String permissionKey="[/api/user/create]:POST";
+        // Tạo khóa permission từ path và method
+        String permissionKey = path + "." + method;
         String permissionValue = permission.getPathToPermission().get(permissionKey);
-        System.out.println(permissionKey);
-        System.out.println(permissionValue);
+
+        // Log để kiểm tra permissionKey và permissionValue
+        System.out.println("Permission Key: " + permissionKey);
+        System.out.println("Permission Value: " + permissionValue);
+
+        // Nếu permissionValue tồn tại, kiểm tra dựa trên quyền của user
         if (permissionValue != null) {
-            // Bạn có thể thực hiện kiểm tra quyền ở đây nếu cần
-            // Ví dụ:
-            // return checkUserRolePermission(role, permissionValue);
-            System.out.println("Permission value: " + permissionValue);
-            return true; // Ví dụ: tất cả các yêu cầu có cấu hình sẽ được phép
+            System.out.println("Checking permissions for: " + permissionValue);
+
+            // Kiểm tra dựa trên quyền role và permission
+            Map<String, Boolean> permissions = Map.of(
+                    "can_create", permissionValue.equals("can_create"),
+                    "can_update", permissionValue.equals("can_update"),
+                    "can_delete", permissionValue.equals("can_delete")
+            );
+
+            // Gọi hàm checkUserRolePermission để kiểm tra vai trò của user
+            boolean hasPermission = checkUserRolePermission(role, permissions);
+            return hasPermission;
         }
+
         return false;
     }
-    private boolean checkUserRolePermission(Role role, Map<String, Boolean> permissions){
-        boolean canCreate=permissions.getOrDefault("create",false);
-        boolean canUpdate=permissions.getOrDefault("update",false);
-        boolean canDelete=permissions.getOrDefault("delete",false);
-        return  (canCreate && role.isCan_create()) ||
+
+    private boolean checkUserRolePermission(Role role, Map<String, Boolean> permissions) {
+        boolean canCreate = permissions.getOrDefault("can_create", false);
+        boolean canUpdate = permissions.getOrDefault("can_update", false);
+        boolean canDelete = permissions.getOrDefault("can_delete", false);
+
+        return (canCreate && role.isCan_create()) ||
                 (canUpdate && role.isCan_update()) ||
                 (canDelete && role.isCan_delete());
-    }
-    private Role getUserRoleFromUsername(String username){
-        return userMapper.findRoleByUsername(username);
     }
 
 
