@@ -1,5 +1,6 @@
 package com.example.springtestsecurity.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String username;
+    @NotNull
     private String password;
     private LocalDateTime create_time;
 

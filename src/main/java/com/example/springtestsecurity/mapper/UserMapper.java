@@ -5,6 +5,7 @@ import com.example.springtestsecurity.entity.User;
 import com.example.springtestsecurity.request.FindUserRequest;
 import com.example.springtestsecurity.request.UserRequest;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
@@ -24,5 +25,5 @@ public interface UserMapper {
 
     List<FindUserRequest> findUser(String username, String  create_time);
     Role findRoleUser(String username);
-    Role findRoleByUsername(String username);
+    boolean findRoleByUsername(@Param("username") String username,@Param("role") String role);
 }

@@ -27,11 +27,11 @@ public class Permission {
     public void setPathToPermissionIgnore(Map<String, String> pathToPermissionIgnore) {
         this.pathToPermissionIgnore = pathToPermissionIgnore;
     }
-    @PostConstruct
-    public void init() {
-        System.out.println("Loaded pathToPermission: " + pathToPermission);
-        for (Map.Entry<String, String> entry : pathToPermission.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
-        }
-    }
+//    @PostConstruct
+//    public void init() {
+//        System.out.println("Loaded pathToPermission: " + pathToPermission);
+//        for (Map.Entry<String, String> entry : pathToPermission.entrySet()) {
+//            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+//        }
+//    }
 }

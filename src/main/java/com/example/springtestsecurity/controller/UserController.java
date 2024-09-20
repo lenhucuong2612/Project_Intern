@@ -8,6 +8,7 @@ import com.example.springtestsecurity.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,13 +17,13 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     @PostMapping("/create")
-    public ApiResponse createUser(@RequestBody UserRequest userRequest){
+    public ApiResponse createUser(@Valid @RequestBody UserRequest userRequest){
         ApiResponse apiResponse=userService.createUser(userRequest);
         return apiResponse;
     }
 
     @PostMapping("/login")
-    public ApiResponse loginUser(@RequestBody UserRequest userRequest){
+    public ApiResponse loginUser(@Valid @RequestBody UserRequest userRequest){
         ApiResponse apiResponse=userService.loginUser(userRequest);
         return apiResponse;
     }
@@ -31,15 +32,14 @@ public class UserController {
         FindUserRequest apiResponse=userService.findUserByName(username);
         return apiResponse;
     }
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     public ApiResponse updateUser(
-            @PathVariable("id") Long id,
-            @RequestBody UserRequest userRequestBody
+            @Valid @RequestBody UserRequest userRequestBody
     ){
         UserRequest userRequest=new UserRequest();
         userRequest.setUsername(userRequestBody.getUsername());
         userRequest.setPassword(userRequestBody.getPassword());
-        ApiResponse apiResponse=userService.updateUser(id,userRequest);
+        ApiResponse apiResponse=userService.updateUser(userRequestBody.getId(), userRequest);
         return apiResponse;
 
     }

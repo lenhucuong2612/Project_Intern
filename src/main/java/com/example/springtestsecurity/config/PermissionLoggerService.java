@@ -12,7 +12,7 @@ public class PermissionLoggerService {
     private final Permission permission;
     @PostConstruct
     public void logPermissionData() {
-        // Log dữ liệu cấu hình
-        System.out.println("Permission data: " + permission);
+//        // Log dữ liệu cấu hình
+//        System.out.println("Permission data: " + permission);
     }
 }
