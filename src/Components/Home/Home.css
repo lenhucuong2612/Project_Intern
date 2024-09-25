@@ -1,0 +1,4 @@
+.custom-table {
+    width: 200px; /* hoặc kích thước mong muốn, ví dụ: 80% */
+    max-width: 800px; /* chiều rộng tối đa nếu cần */
+}
