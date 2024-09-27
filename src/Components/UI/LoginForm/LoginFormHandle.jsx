@@ -1,7 +1,7 @@
 // LoginFormLogic.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import  axiosInstance from '../Axios/axios.jsx'
+import  axiosInstance from '../../Axios/axios.jsx'
 const useLoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -18,7 +18,8 @@ const useLoginForm = () => {
             const data = await response.data;
             if (data.error_cd==='000') {
                 console.log('Login successful', data);
-                localStorage.setItem('token', data.token); // Giả sử bạn nhận được token trong data
+                localStorage.setItem('token', data.token); 
+                localStorage.setItem('tokenType', data.tokenType)
                 navigate('/home')
             } else {
                 setErrorMessage(data.message || 'Login failed');
