@@ -20,11 +20,7 @@ public class PermissionService {
         String permissionValue = permission.getPathToPermission().get(permissionKey);
         System.out.println("Path: " + permissionKey);
         System.out.println("Value: " + permissionValue);
-        boolean role = userMapper.findRoleByUsername(username,permissionValue);
-        if (role) {
-            return true;
-        }
-        return false;
+        return userMapper.findRoleByUsername(username,permissionValue);
     }
 
 

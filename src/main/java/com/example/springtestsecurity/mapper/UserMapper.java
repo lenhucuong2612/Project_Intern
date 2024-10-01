@@ -3,7 +3,10 @@ package com.example.springtestsecurity.mapper;
 import com.example.springtestsecurity.entity.Role;
 import com.example.springtestsecurity.entity.User;
 import com.example.springtestsecurity.request.FindUserRequest;
+import com.example.springtestsecurity.request.ListUser;
+import com.example.springtestsecurity.request.UserNameRequest;
 import com.example.springtestsecurity.request.UserRequest;
+import com.example.springtestsecurity.response.UserResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -14,16 +17,20 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     int insertUser(User user);
-    FindUserRequest findUserName(String username);
+    User findUserName(String username);
     User checkLogin(String username);
     int updateUser(Long id,UserRequest userRequest);
-    User checkUserById(Long id);
+    int updateUserByName(Long id,UserNameRequest userNameRequest);
     User checkExitsUserById(Long id, String username);
     int deleteUserByName(String username);
     @Select("select username, create_time from users where create_time<=#{create_time}")
     List<FindUserRequest> findListUserByCreateDay(LocalDate create_time);
-
-    List<FindUserRequest> findUser(String username, String  create_time);
+    List<UserResponse> findUser(String username,
+                                @Param("start_time") String start_time, @Param("end_time") String end_time,
+                                @Param("limit") int limit, @Param("offset") int offset);
+    int countUsers(String username,
+                   @Param("start_time") String start_time, @Param("end_time") String end_time);
     Role findRoleUser(String username);
     boolean findRoleByUsername(@Param("username") String username,@Param("role") String role);
+    List<ListUser> listUser(@Param("limit") int limit, @Param("offset") int offset);
 }

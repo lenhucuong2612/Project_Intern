@@ -1,17 +1,20 @@
 package com.example.springtestsecurity.exception;
 
 import com.example.springtestsecurity.response.ApiResponse;
+import com.example.springtestsecurity.response.ApiResponseHandle;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handleValidationExceptionsNotEmpty(MethodArgumentNotValidException ex) {
-        ApiResponse apiResponse = new ApiResponse();
+    public ResponseEntity<ApiResponseHandle> handleValidationExceptionsNotEmpty(MethodArgumentNotValidException ex) {
+        ApiResponseHandle apiResponse = new ApiResponseHandle();
         apiResponse.setError_cd("003");
 
         StringBuilder errorMsg = new StringBuilder();
@@ -30,6 +33,10 @@ public class GlobalExceptionHandler {
         });
 
         apiResponse.setError_msg(errorMsg.toString());
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.ok(apiResponse);
+    }
+    @ExceptionHandler(value = DateTimeParseException.class)
+    public ResponseEntity<ApiResponseHandle> handleDateTimeParseException(DateTimeParseException ex){
+        return ResponseEntity.ok(new ApiResponseHandle("003","Date is not in correct format"));
     }
 }

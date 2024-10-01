@@ -4,14 +4,14 @@
 <mapper namespace="com.example.springtestsecurity.mapper.UserMapper">
 
     <!-- Truy vấn người dùng theo id -->
-    <select id="findUserName" parameterType="String" resultType="com.example.springtestsecurity.request.FindUserRequest">
-        SELECT username, create_time
+    <select id="findUserName" parameterType="String" resultType="com.example.springtestsecurity.entity.User">
+        SELECT username, create_time, password, id
         FROM users
         WHERE username = #{username}
     </select>
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (username, password, create_time, role_id)
-        VALUES (#{username}, #{password}, now(),#{role.id})
+        VALUES (#{username}, #{password}, CURRENT_DATE,#{role.id})
     </insert>
     <select id="checkLogin" parameterType="String" resultType="com.example.springtestsecurity.entity.User">
         SELECT username,password
@@ -22,6 +22,11 @@
         UPDATE users
         SET username = #{userRequest.username},
             password = #{userRequest.password}
+        WHERE id = #{id}
+    </update>
+    <update id="updateUserByName" parameterType="map">
+        UPDATE users
+        SET username = #{userNameRequest.username}
         WHERE id = #{id}
     </update>
     <select id="checkUserById" parameterType="Long" resultType="com.example.springtestsecurity.entity.User">
@@ -43,43 +48,78 @@
     <delete id="deleteUserByName" parameterType="String">
         delete from users where username=#{username}
     </delete>
-    <select id="findUser" parameterType="map" resultType="com.example.springtestsecurity.request.FindUserRequest">
-        select username,create_time
+    <select id="findUser" parameterType="map" resultType="com.example.springtestsecurity.response.UserResponse">
+        select id,username,create_time
         from users
        <where>
            <if test="username!=null and username != ''">
-              username=#{username}
+               username LIKE CONCAT('%', #{username}, '%')
            </if>
-           <if test="create_time!=null and create_time != ''" >
+           <if test="start_time!=null and start_time != ''" >
                <if test="username != null and username != ''">
                    and
                </if>
-               create_time &lt; to_timestamp(#{create_time}, 'yyyy-MM-dd')
+               create_time <![CDATA[>=]]> to_timestamp(#{start_time},'yyyy-MM-dd')
+           </if>
+           <if test="end_time!=null and end_time!=''">
+               <if test="start_time != null and start_time != '' or username != null and username != ''">
+                   AND
+               </if>
+               create_time <![CDATA[<=]]> to_timestamp(#{end_time},'yyyy-MM-dd')
            </if>
        </where>
+        <if test="username != null or start_time != null or end_time != null">
+            ORDER BY id
+            limit #{limit} offset #{offset}
+        </if>
     </select>
-
-<!--    <select id="findRoleByUsername" parameterType="String" resultType="com.example.springtestsecurity.entity.Role">-->
-<!--        select r.id, r.can_create, r.can_update, r.can_delete,r.name-->
-<!--        from roles r-->
-<!--        inner join users u on u.role_id=r.id-->
-<!--        where u.username=#{username}-->
-<!--    </select>-->
+    <select id="countUsers" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM users
+        <where>
+            <if test="username != null and username != ''">
+                username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="start_time != null and start_time != ''">
+                <if test="username != null and username != ''">
+                    AND
+                </if>
+                create_time <![CDATA[>=]]> to_timestamp(#{start_time}, 'yyyy-MM-dd')
+            </if>
+            <if test="end_time != null and end_time != ''">
+                <if test="start_time != null and start_time != '' or username != null and username != ''">
+                    AND
+                </if>
+                create_time <![CDATA[<=]]> to_timestamp(#{end_time}, 'yyyy-MM-dd')
+            </if>
+        </where>
+    </select>
 
     <select id="findRoleByUsername" parameterType="map" resultType="boolean">
-        select
-        <if test="role != null">
-            r.can_create
-        </if>
-        <if test="role != null">
-            , r.can_update
-        </if>
-        <if test="role != null">
-            , r.can_delete
-        </if>
-        from roles r
-        inner join users u on u.role_id = r.id
-        where u.username = #{username}
+        select exists(
+                       select *
+                       from roles r
+                                inner join users u on u.role_id = r.id
+                       where u.username = #{username}
+                         <if test="role == 'can_create'">
+                             AND can_create is true
+                         </if>
+                            <if test="role == 'can_update'">
+                                AND can_update is true
+                            </if>
+                            <if test="role == 'can_delete'">
+                                AND can_delete is true
+                            </if>
+                   )
     </select>
-
+    <select id="listUser" resultType="com.example.springtestsecurity.request.ListUser">
+        SELECT id,username, create_time
+        FROM users
+        order by id
+        limit #{limit} offset #{offset}
+    </select>
+    <insert id="insertRole" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (can_create, can_update, can_delete, name)
+        VALUES (false , false, false,#{name})
+    </insert>
 </mapper>

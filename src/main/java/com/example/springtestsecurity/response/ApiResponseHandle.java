@@ -5,11 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponse {
+@AllArgsConstructor
+public class ApiResponseHandle {
     private String error_cd;
     private String error_msg;
-    private String tokenType;
-    private String token;
 }

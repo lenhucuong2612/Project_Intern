@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -15,13 +16,17 @@ public class RedisService {
     @Value("${auth.token.expirationInMils}")
     private int jwtExpirationMs;
     //save token for redis
-    public void saveToken(String token){
+    public void saveToken(String name,String token){
         long ttlMs=jwtExpirationMs;
-        redisTemplate.opsForSet().add(TOKEN_SET,token);
-        redisTemplate.expire(TOKEN_SET, ttlMs, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(name,token);
+        redisTemplate.expire(name, ttlMs, TimeUnit.MILLISECONDS);
     }
     //check token in redis
-    public boolean isTokenExists(String token){
-        return redisTemplate.opsForSet().isMember(TOKEN_SET, token);
+    public boolean isTokenExists(String keyName){
+        String token=redisTemplate.opsForValue().get(keyName);
+        return token != null;
+    }
+    public boolean deleteToken(String keyName){
+        return Objects.requireNonNull(redisTemplate.opsForValue().getAndDelete(keyName)).isEmpty();
     }
 }
