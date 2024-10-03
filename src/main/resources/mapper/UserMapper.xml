@@ -126,4 +126,22 @@
         INSERT INTO users (can_create, can_update, can_delete, name)
         VALUES (false , false, false,#{name})
     </insert>
+
+
+    <update id="sendOtp" parameterType="map">
+        UPDATE users
+        SET otp = #{otp}
+        WHERE username = #{username}
+    </update>
+
+    <update id="changePasswordUser" parameterType="map">
+        UPDATE users
+        SET password = #{userChangePassword.password}
+        WHERE username = #{userChangePassword.username} and otp = #{userChangePassword.otp}
+    </update>
+    <select id="checkUserNameAndToken" parameterType="map" resultType="int">
+        select * from users
+        WHERE username = #{userChangePassword.username} and otp = #{userChangePassword.otp}
+    </select>
+
 </mapper>

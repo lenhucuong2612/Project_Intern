@@ -26,7 +26,10 @@ public class User {
     private String password;
     private LocalDateTime create_time;
 
+    private Integer otp;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="role_id")
     private Role role;
+
 }

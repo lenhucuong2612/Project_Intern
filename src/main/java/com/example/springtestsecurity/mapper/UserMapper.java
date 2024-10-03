@@ -18,6 +18,7 @@ public interface UserMapper {
     User checkLogin(String username);
     int updateUser(@Param("userRequestUpdate") UserRequestUpdate userRequest);
     int updateUserByName(Long id,UserNameRequest userNameRequest);
+    int changePasswordUser(@Param("userChangePassword") UserChangePassword userChangePassword);
     User checkExitsUserById(Long id, String username);
     int deleteUserByName(String username);
     @Select("select username, create_time from users where create_time<=#{create_time}")
@@ -30,4 +31,8 @@ public interface UserMapper {
     Role findRoleUser(String username);
     boolean findRoleByUsername(@Param("username") String username,@Param("role") String role);
     List<ListUser> listUser(@Param("limit") int limit, @Param("offset") int offset);
+
+    int sendOtp(@Param("username") String username,@Param("otp") int otp);
+
+    int checkUserNameAndToken(@Param("userChangePassword") UserChangePassword userChangePassword);
 }

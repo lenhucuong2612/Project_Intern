@@ -3,7 +3,9 @@ package com.example.springtestsecurity.exception;
 import com.example.springtestsecurity.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -37,5 +39,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = DateTimeParseException.class)
     public ResponseEntity<ApiResponse> handleDateTimeParseException(DateTimeParseException ex){
         return ResponseEntity.ok(new ApiResponse("003","Date is not in correct format"));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse> handleMethodNoSupportException(HttpRequestMethodNotSupportedException e){
+        return ResponseEntity.ok(new ApiResponse("003","Method no support"));
+    }
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ApiResponse> handleNullPointerException(NullPointerException ex){
+        return ResponseEntity.ok(new ApiResponse("003","Null pointer exception"));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e){
+        return ResponseEntity.ok(new ApiResponse("003","Missing servlet request param"));
     }
 }

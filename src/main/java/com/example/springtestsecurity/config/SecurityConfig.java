@@ -18,7 +18,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/api/user/**")
-                .excludePathPatterns("/api/user/login");
+                .excludePathPatterns("/api/user/login","/api/user/sendOtp","/api/user/changePassword");
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {

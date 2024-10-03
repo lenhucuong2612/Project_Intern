@@ -2,14 +2,12 @@ package com.example.springtestsecurity.controller;
 
 import com.example.springtestsecurity.entity.User;
 import com.example.springtestsecurity.mapper.UserMapper;
-import com.example.springtestsecurity.request.FindUserRequest;
-import com.example.springtestsecurity.request.UserNameRequest;
-import com.example.springtestsecurity.request.UserRequest;
-import com.example.springtestsecurity.request.UserRequestUpdate;
+import com.example.springtestsecurity.request.*;
 import com.example.springtestsecurity.response.ApiResponse;
 import com.example.springtestsecurity.response.ApiResponseToken;
 import com.example.springtestsecurity.response.PageApiResponse;
 import com.example.springtestsecurity.response.UserResponse;
+import com.example.springtestsecurity.service.EmailService;
 import com.example.springtestsecurity.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final EmailService emailService;
     @PostMapping("/create")
     public ApiResponse createUser(@Valid @RequestBody UserRequest userRequest){
         ApiResponse apiResponse=userService.createUser(userRequest);
@@ -83,5 +82,15 @@ public class UserController {
     @GetMapping("/logout")
     public ApiResponse logout(@RequestHeader("Authorization") String token){
         return userService.logOut(token);
+    }
+
+    @PostMapping("/sendOtp")
+    public ApiResponse sendOtp(@RequestParam("username") String username){
+        return emailService.sendOtpForUser(username);
+    }
+
+    @PostMapping("/changePassword")
+    public ApiResponse changePassword(@RequestBody UserChangePassword userChangePassword){
+        return emailService.changeUserPassword(userChangePassword);
     }
 }
