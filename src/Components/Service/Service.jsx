@@ -1,7 +1,7 @@
 import axiosInstance from "../Axios/axios";
 
-export async function fetchUsers(){
-    const response=await axiosInstance.get('/listUser')
+export async function fetchUsers(page,size){
+    const response=await axiosInstance.get(`/listUser?page=${page} & size=${size}`)
     return response.data
 }
 export async function exitUser(username){
@@ -20,14 +20,29 @@ export async function findUserByName(username) {
     return response.data
     
 }
-export async function findUser(username,create_time){
+export async function findUser(username,start_time,end_time, page,size){
     const response=await axiosInstance.post(`/findUser`,{
-            username:username,
-            create_time:create_time
+           username,
+           start_time,
+           end_time
+    },{
+        params:{
+            page: page,
+            size: size
+        }
     })
+    console.log('Response data from findUser:', response.data); 
     return response.data
 }
 export async function updateUser(user) {
     const response=await axiosInstance.put('/update',user)
+    return response.data
+}
+export async function updateUserName(user) {
+    const response=await axiosInstance.put('/update/username',user)
+    return response.data
+}
+export async function logoutUser(token){
+    const response=await axiosInstance.get('/logout',token)
     return response.data
 }

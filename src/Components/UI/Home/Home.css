@@ -2,3 +2,21 @@
     width: 200px; /* hoặc kích thước mong muốn, ví dụ: 80% */
     max-width: 800px; /* chiều rộng tối đa nếu cần */
 }
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}

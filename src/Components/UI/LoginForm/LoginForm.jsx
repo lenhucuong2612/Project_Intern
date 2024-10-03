@@ -2,22 +2,26 @@
 import React from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from 'react-icons/fa';
-import useLoginForm from './LoginFormHandle'; 
+import useLoginForm from './LoginFormHandle';  
+import { useErrorNotification } from '../../Notification/useErrorNotification';
+
 
 const LoginForm = () => {
     const {
         username,
         password,
-        errorMessage,
         setUsername,
         setPassword,
-        handleSubmit,
+        handleSubmit
     } = useLoginForm();
-
     return (
         <div className='wrapper'>
+            
             <form onSubmit={handleSubmit}>
                 <h1>Login</h1>
+                <div>
+                    
+                </div>
                 <div className="input-box">
                     <input
                         type="text"
@@ -39,7 +43,6 @@ const LoginForm = () => {
                     <FaLock className='icon' />
                 </div>
                 <button type='submit'>Login</button>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             </form>
         </div>
     );

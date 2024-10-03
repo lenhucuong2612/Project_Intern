@@ -8,7 +8,8 @@ const AddUser = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [formData, setFormData]=useState('')
+    const [formData, setFormData] = useState({ username: '', password: '', role: '' });
+    const [errors, setErrors] = useState({});
     const navigate=useNavigate();
 
     const handleChange=(e)=>{
@@ -23,17 +24,23 @@ const AddUser = () => {
         if(!formData.password){
             newErrors.password='Password is required';
         }else if(formData.password.length<5){
-            newErrors.password='Password must be at least 6 characters long';
+            newErrors.password='Password must be at least 5 characters long';
         }
-        return newErrors;
-    }
-    const handleSubmit=(e)=>{
-        e.preventDefault();
-        
+
+        if (!formData.role) {
+            newErrors.role = 'Role is required';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     }
     const insertUser = (e) => {
         e.preventDefault();
-        const user = { username, password, role };
+        if (!validate()) {
+            console.log('Validator error: ', errors);
+            return; 
+        }
+
+        const user = { username: formData.username, password: formData.password, role: formData.role };
 
         addUser(user)
             .then((response) => {
@@ -68,20 +75,21 @@ const AddUser = () => {
                                         name="username"
                                         value={formData.username}
                                         className="form-control"
-                                        onChange={(e) => setUsername(e.target.value)}
+                                        onChange={handleChange}
                                     />
+                                    {errors.username && <p className="error-message text-danger">{errors.username}</p>}
                                 </div>
-
                                 <div className="form-group mb-2">
                                     <label className="form-label"> Password :</label>
                                     <input
                                         type="password"
                                         placeholder="Enter password"
                                         name="password"
-                                        value={password}
+                                        value={formData.password}
                                         className="form-control"
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={handleChange}
                                     />
+                                    {errors.password && <p className="error-message text-danger">{errors.password}</p>}
                                 </div>
                                 <div className="form-group mb-2">
                                     <label className="form-label"> Role:</label>
@@ -89,8 +97,8 @@ const AddUser = () => {
                                         className="form-select"
                                         aria-label=".form-select-lg example"
                                         name="role"
-                                        value={role} // Sử dụng thuộc tính value cho thẻ <select>
-                                        onChange={(e) => setRole(e.target.value)}
+                                        value={formData.role} // Sử dụng thuộc tính value cho thẻ <select>
+                                        onChange={handleChange}
                                     >
                                         <option value="" disabled>Open this select menu</option> {/* Không cần sử dụng selected ở đây */}
                                         <option value="ROOT">ROOT</option>
@@ -98,6 +106,7 @@ const AddUser = () => {
                                         <option value="USER">USER</option>
                                         <option value="GUEST">GUEST</option>
                                     </select>
+                                    {errors.role && <p className="error-message text-danger">{errors.role}</p>}
                                 </div>
 
                                 <button className="btn btn-success">Submit</button>
