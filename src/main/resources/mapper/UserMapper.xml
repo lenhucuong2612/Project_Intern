@@ -20,10 +20,14 @@
     </select>
     <update id="updateUser" parameterType="map">
         UPDATE users
-        SET username = #{userRequest.username},
-            password = #{userRequest.password}
-        WHERE id = #{id}
+        SET
+        username = #{userRequestUpdate.username}
+        <if test="userRequestUpdate.password != null and userRequestUpdate.password != ''">
+            , password = #{userRequestUpdate.password}
+        </if>
+        WHERE id = #{userRequestUpdate.id}
     </update>
+
     <update id="updateUserByName" parameterType="map">
         UPDATE users
         SET username = #{userNameRequest.username}
@@ -49,7 +53,7 @@
         delete from users where username=#{username}
     </delete>
     <select id="findUser" parameterType="map" resultType="com.example.springtestsecurity.response.UserResponse">
-        select id,username,create_time
+        select id,username,create_time, row_number() over (order by id) as "index"
         from users
        <where>
            <if test="username!=null and username != ''">

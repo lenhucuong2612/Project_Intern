@@ -15,3 +15,4 @@ api-permission:
   path-to-permission-ignore:
     '[/api/user/login]:POST': login_user
     '[/api/user/findUser]:GET': find_user
+    '[/api/user/listUser]:GET': find_list_user

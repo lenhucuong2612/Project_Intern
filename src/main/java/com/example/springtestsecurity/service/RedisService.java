@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisService {
     private final RedisTemplate<String, String> redisTemplate;
-    private static final String TOKEN_SET="tokens";
     @Value("${auth.token.expirationInMils}")
     private int jwtExpirationMs;
     //save token for redis
@@ -26,7 +25,13 @@ public class RedisService {
         String token=redisTemplate.opsForValue().get(keyName);
         return token != null;
     }
-    public boolean deleteToken(String keyName){
-        return Objects.requireNonNull(redisTemplate.opsForValue().getAndDelete(keyName)).isEmpty();
+public boolean deleteToken(String keyName) {
+    String value = redisTemplate.opsForValue().get(keyName);
+    if (value != null) {
+        redisTemplate.delete(keyName);
+        return true;
     }
+    return false;
+}
+
 }

@@ -2,10 +2,7 @@ package com.example.springtestsecurity.mapper;
 
 import com.example.springtestsecurity.entity.Role;
 import com.example.springtestsecurity.entity.User;
-import com.example.springtestsecurity.request.FindUserRequest;
-import com.example.springtestsecurity.request.ListUser;
-import com.example.springtestsecurity.request.UserNameRequest;
-import com.example.springtestsecurity.request.UserRequest;
+import com.example.springtestsecurity.request.*;
 import com.example.springtestsecurity.response.UserResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +16,7 @@ public interface UserMapper {
     int insertUser(User user);
     User findUserName(String username);
     User checkLogin(String username);
-    int updateUser(Long id,UserRequest userRequest);
+    int updateUser(@Param("userRequestUpdate") UserRequestUpdate userRequest);
     int updateUserByName(Long id,UserNameRequest userNameRequest);
     User checkExitsUserById(Long id, String username);
     int deleteUserByName(String username);

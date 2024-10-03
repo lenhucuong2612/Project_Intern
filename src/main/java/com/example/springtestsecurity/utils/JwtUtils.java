@@ -24,10 +24,6 @@ public class JwtUtils {
                 .compact();
         return token;
     }
-//    public String getUsernameFromToken(String token){
-//        System.out.println(getClaimsFromToken(token).getSubject());
-//        return getClaimsFromToken(token).getSubject();
-//    }
     public String getUsernameFromToken(String token){
         if(validateToken(token)){
             Claims claims=Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();

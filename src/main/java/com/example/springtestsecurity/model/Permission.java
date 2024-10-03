@@ -3,7 +3,6 @@ package com.example.springtestsecurity.model;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "api-permission")

@@ -3,10 +3,11 @@ package com.example.springtestsecurity.controller;
 import com.example.springtestsecurity.entity.User;
 import com.example.springtestsecurity.mapper.UserMapper;
 import com.example.springtestsecurity.request.FindUserRequest;
-import com.example.springtestsecurity.request.ListUser;
 import com.example.springtestsecurity.request.UserNameRequest;
 import com.example.springtestsecurity.request.UserRequest;
+import com.example.springtestsecurity.request.UserRequestUpdate;
 import com.example.springtestsecurity.response.ApiResponse;
+import com.example.springtestsecurity.response.ApiResponseToken;
 import com.example.springtestsecurity.response.PageApiResponse;
 import com.example.springtestsecurity.response.UserResponse;
 import com.example.springtestsecurity.service.UserService;
@@ -21,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserMapper userMapper;
     @PostMapping("/create")
     public ApiResponse createUser(@Valid @RequestBody UserRequest userRequest){
         ApiResponse apiResponse=userService.createUser(userRequest);
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ApiResponse loginUser(@Valid @RequestBody UserRequest userRequest){
-        ApiResponse apiResponse=userService.loginUser(userRequest);
+    public ApiResponseToken loginUser(@Valid @RequestBody UserRequest userRequest){
+        ApiResponseToken apiResponse=userService.loginUser(userRequest);
         return apiResponse;
     }
     @GetMapping("/findByName")
@@ -51,9 +51,9 @@ public class UserController {
     }
     @PutMapping("/update")
     public ApiResponse updateUserName(
-            @Valid @RequestBody UserRequest userRequestBody
+            @Valid @RequestBody UserRequestUpdate userRequestBody
     ){
-        UserRequest userRequest=new UserRequest();
+        UserRequestUpdate userRequest=new UserRequestUpdate();
         userRequest.setId(userRequestBody.getId());
         userRequest.setUsername(userRequestBody.getUsername());
         userRequest.setPassword(userRequestBody.getPassword());

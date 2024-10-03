@@ -20,12 +20,12 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        //createUserIfNotExits();
+//        createUserIfNotExits();
     }
 //    private void createUserIfNotExits(){
-//        for(int i=1;i<=2;i++){
+//        for(int i=100;i<=120;i++){
 //            String defaultEmail="user"+i+"@email.com";
-//            UserRequest user=new UserRequest();
+//            User user=new User();
 //            user.setUsername(defaultEmail);
 //            user.setPassword(bCryptPasswordEncoder.encode("12345"));
 //            userMapper.insertUser(user);

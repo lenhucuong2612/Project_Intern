@@ -26,7 +26,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000") // Địa chỉ frontend
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Các phương thức cho phép
                 .allowedHeaders("*") // Cho phép mọi header
-                .allowCredentials(true); // Nếu bạn cần gửi cookie hoặc thông tin xác thực
+                .allowCredentials(true); // Nếu cần gửi cookie hoặc thông tin xác thực
     }
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

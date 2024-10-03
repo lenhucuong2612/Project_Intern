@@ -3,19 +3,15 @@ package com.example.springtestsecurity.service;
 import com.example.springtestsecurity.entity.Role;
 import com.example.springtestsecurity.entity.User;
 import com.example.springtestsecurity.mapper.UserMapper;
-import com.example.springtestsecurity.request.FindUserRequest;
-import com.example.springtestsecurity.request.ListUser;
-import com.example.springtestsecurity.request.UserNameRequest;
-import com.example.springtestsecurity.request.UserRequest;
+import com.example.springtestsecurity.request.*;
 import com.example.springtestsecurity.response.ApiResponse;
+import com.example.springtestsecurity.response.ApiResponseToken;
 import com.example.springtestsecurity.response.UserResponse;
 import com.example.springtestsecurity.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,20 +24,20 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisService redisService;
 
-    public ApiResponse loginUser(UserRequest userRequest) {
+    public ApiResponseToken loginUser(UserRequest userRequest) {
         User user = userMapper.checkLogin(userRequest.getUsername());
         if (user == null || !bCryptPasswordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
-            return apiResponse("001", "Invalid username or password", null, null);
+            return apiResponseToken("001", "Invalid username or password", null, null);
         }
 
         String token = jwtUtils.generateToken(userRequest.getUsername());
         redisService.saveToken(userRequest.getUsername(), token);
-        return apiResponse("000", "Success", "Bearer", token);
+        return apiResponseToken("000", "Login success", "Bearer", token);
     }
 
     public ApiResponse createUser(UserRequest request) {
         if (userMapper.findUserName(request.getUsername()) != null) {
-            return apiResponse("001", "User already exits", null, null);
+            return apiResponse("001", "User already exits");
         }
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword().trim());
         User newUser = new User();
@@ -50,14 +46,14 @@ public class UserService {
         Role role_id = userMapper.findRoleUser(request.getRole().toUpperCase());
         System.out.println("Role id" + role_id);
         if (role_id == null) {
-            return apiResponse("001", "Role no empty", null, null);
+            return apiResponse("001", "Role no empty");
         }
         newUser.setRole(role_id);
         int checkInsert = userMapper.insertUser(newUser);
         if (checkInsert > 0) {
-            return apiResponse("000", "Register success", null, null);
+            return apiResponse("000", "Register success");
         } else {
-            return apiResponse("001", "No success", null, null);
+            return apiResponse("001", "No success");
         }
     }
 
@@ -72,41 +68,45 @@ public class UserService {
         return userResponse;
     }
 
-    public ApiResponse updateUser(UserRequest userRequest) {
+    public ApiResponse updateUser(UserRequestUpdate userRequest) {
         if (userMapper.checkExitsUserById(userRequest.getId(), userRequest.getUsername()) != null) {
-            return apiResponse("001", "Email already exist", null, null);
+            return apiResponse("001", "Email already exist");
         }
-        UserRequest userUpdate = new UserRequest();
+        UserRequestUpdate userUpdate = new UserRequestUpdate();
+        userUpdate.setId(userRequest.getId());
         userUpdate.setUsername(userRequest.getUsername());
-        userUpdate.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword().trim()));
-        int checkUpdate = userMapper.updateUser(userRequest.getId(), userUpdate);
+        if(!userRequest.getPassword().isEmpty()){
+            System.out.println("password"+userRequest.getPassword());
+            userUpdate.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword().trim()));
+        }
+        int checkUpdate = userMapper.updateUser(userUpdate);
         if (checkUpdate > 0) {
-            return apiResponse("000", "Update success", null, null);
+            return apiResponse("000", "Update success");
         } else {
-            return apiResponse("001", "Update fail", null, null);
+            return apiResponse("001", "Update fail");
         }
     }
 
     public ApiResponse updateUserName(UserNameRequest userRequest) {
         if (userMapper.checkExitsUserById(userRequest.getId(), userRequest.getUsername()) != null) {
-            return apiResponse("001", "Email already exist", null, null);
+            return apiResponse("001", "Email already exist");
         }
         UserNameRequest userUpdate = new UserNameRequest();
         userUpdate.setUsername(userRequest.getUsername());
         int checkUpdate = userMapper.updateUserByName(userRequest.getId(), userUpdate);
         if (checkUpdate > 0) {
-            return apiResponse("000", "Update success", null, null);
+            return apiResponse("000", "Update success");
         } else {
-            return apiResponse("001", "Update fail", null, null);
+            return apiResponse("001", "Update fail");
         }
     }
 
     public ApiResponse deleteUser(String username) {
         int deleteUser = userMapper.deleteUserByName(username);
         if (deleteUser > 0) {
-            return apiResponse("000", "Delete success", null, null);
+            return apiResponse("000", "Delete success");
         } else {
-            return apiResponse("001", "No delete success", null, null);
+            return apiResponse("001", "No delete success");
         }
     }
 
@@ -152,12 +152,15 @@ public class UserService {
         String token = authorizationHeader.substring("Bearer ".length());
         boolean deleteToken = redisService.deleteToken(jwtUtils.getUsernameFromToken(token));
         if (deleteToken) {
-            return apiResponse("000", "Logout success", null, null);
+            return apiResponse("000", "Logout success");
         }
-        return apiResponse("001", "Logout fail", null, null);
+        return apiResponse("001", "Logout fail");
     }
 
-    private ApiResponse apiResponse(String error_cd, String error_msg, String tokenType, String token) {
-        return new ApiResponse(error_cd, error_msg, tokenType, token);
+    private ApiResponseToken apiResponseToken(String error_cd, String error_msg, String tokenType, String token) {
+        return new ApiResponseToken(error_cd, error_msg, tokenType, token);
+    }
+    private ApiResponse apiResponse(String error_cd, String error_msg) {
+        return new ApiResponse(error_cd, error_msg);
     }
 }
